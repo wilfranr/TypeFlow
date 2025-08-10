@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing Speed Game | Juego de Mecanografía</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- ESTILOS GLOBALES Y ESTÉTICA (Sin cambios) --- */
+      :root {
+        --dark-bg: #1a1a2e;
+        --primary-color: #00a8e8;
+        --secondary-color: #f94144;
+        --correct-color: #00f5d4;
+        --text-color: #e0e0e0;
+        --card-bg: rgba(23, 23, 43, 0.7);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Roboto Mono", monospace;
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        overflow: hidden;
+        background-image:
+          linear-gradient(0deg, rgba(26, 26, 46, 0.9), rgba(26, 26, 46, 0.9)),
+          url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Cg fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.1"%3E%3Cpath opacity=".5" d="M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h16v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h9v9h1v-9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z"/%3E%3Cpath d="M6 5V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v5h9V0h1v6H0V5h6zM6 15V10h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 25V20h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 35V30h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 45V40h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 55V50h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 65V60h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 75V70h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 85V80h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6zM6 95V90h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v5h9v-5h1v6H0v-1h6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+      }
+
+      .container {
+        background: var(--card-bg);
+        border: 1px solid var(--primary-color);
+        border-radius: 15px;
+        padding: 40px;
+        width: 90%;
+        max-width: 800px;
+        text-align: center;
+        box-shadow: 0 0 25px rgba(0, 168, 232, 0.5);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        animation: fadeIn 0.8s ease-in-out;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: var(--primary-color);
+        text-shadow: 0 0 10px var(--primary-color);
+        margin-bottom: 20px;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      #start-screen,
+      #game-over-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #game-screen {
+        display: none;
+      }
+
+      #game-stats {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin-bottom: 30px;
+        font-size: 1.2rem;
+      }
+
+      #game-stats span {
+        font-weight: bold;
+        color: var(--text-color);
+      }
+
+      #timer,
+      #score {
+        color: var(--primary-color);
+        text-shadow: 0 0 5px var(--primary-color);
+      }
+
+      #timer.warning {
+        color: var(--secondary-color);
+        animation: pulse 1s infinite;
+      }
+
+      #word-display {
+        font-size: 3rem;
+        margin-bottom: 30px;
+        font-weight: bold;
+        color: var(--correct-color);
+        text-shadow: 0 0 15px var(--correct-color);
+        letter-spacing: 3px;
+        animation: slideDown 0.5s forwards;
+      }
+
+      #typing-input {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid var(--primary-color);
+        background-color: #1a1a2e;
+        color: var(--text-color);
+        font-family: "Roboto Mono", monospace;
+        text-align: center;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      #typing-input:focus {
+        box-shadow: 0 0 15px var(--primary-color);
+        transform: scale(1.02);
+      }
+
+      .btn {
+        background-color: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 12px 25px;
+        margin: 10px;
+        border-radius: 8px;
+        font-family: "Roboto Mono", monospace;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+      }
+
+      .btn:hover {
+        background-color: var(--primary-color);
+        color: var(--dark-bg);
+        box-shadow: 0 0 20px var(--primary-color);
+        transform: translateY(-3px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      #level-selection button.btn {
+        border-color: var(--correct-color);
+        color: var(--correct-color);
+      }
+      #level-selection button.btn:hover {
+        background-color: var(--correct-color);
+        color: var(--dark-bg);
+        box-shadow: 0 0 20px var(--correct-color);
+      }
+
+      /* --- NUEVO: ESTILOS PARA HIGH SCORE --- */
+      .high-score-display {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        opacity: 0.7;
+      }
+
+      #new-record-message {
+        color: var(--correct-color);
+        font-weight: bold;
+        margin-top: 15px;
+        animation: pulseRecord 1.5s infinite;
+      }
+
+      @keyframes pulseRecord {
+        0% {
+          transform: scale(1);
+          text-shadow: 0 0 5px var(--correct-color);
+        }
+        50% {
+          transform: scale(1.05);
+          text-shadow: 0 0 20px var(--correct-color);
+        }
+        100% {
+          transform: scale(1);
+          text-shadow: 0 0 5px var(--correct-color);
+        }
+      }
+
+      /* --- ANIMACIONES (Sin cambios) --- */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          text-shadow: 0 0 5px var(--secondary-color);
+        }
+        50% {
+          transform: scale(1.1);
+          text-shadow: 0 0 15px var(--secondary-color);
+        }
+        100% {
+          transform: scale(1);
+          text-shadow: 0 0 5px var(--secondary-color);
+        }
+      }
+      .shake {
+        animation: shake 0.5s;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+      .flash-correct {
+        animation: flashCorrect 0.5s;
+      }
+      @keyframes flashCorrect {
+        0% {
+          background-color: transparent;
+        }
+        50% {
+          background-color: rgba(0, 245, 212, 0.2);
+        }
+        100% {
+          background-color: transparent;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container" id="main-container">
+      <!-- PANTALLA DE INICIO (Con High Score) -->
+      <div id="start-screen">
+        <h1>Typing Speed Test</h1>
+        <p>
+          Pon a prueba tu velocidad de escritura. Selecciona un nivel para
+          comenzar. Tienes 60 segundos para escribir tantas palabras como
+          puedas.
+        </p>
+        <h3>Selecciona un Nivel</h3>
+        <div id="level-selection">
+          <button class="btn" onclick="startGame(1)">
+            Fácil <br /><span
+              class="high-score-display"
+              id="high-score-1"
+            ></span>
+          </button>
+          <button class="btn" onclick="startGame(2)">
+            Medio <br /><span
+              class="high-score-display"
+              id="high-score-2"
+            ></span>
+          </button>
+          <button class="btn" onclick="startGame(3)">
+            Difícil <br /><span
+              class="high-score-display"
+              id="high-score-3"
+            ></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PANTALLA DE JUEGO (Sin cambios) -->
+      <div id="game-screen">
+        <div id="game-stats">
+          <h3>Nivel: <span id="current-level-display"></span></h3>
+          <h3>Tiempo: <span id="timer">60</span>s</h3>
+          <h3>Puntaje: <span id="score">0</span></h3>
+        </div>
+        <h2 id="word-display"></h2>
+        <input
+          type="text"
+          id="typing-input"
+          placeholder="Escribe la palabra aquí..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+      </div>
+
+      <!-- PANTALLA DE FIN DE JUEGO (Con High Score y Mensaje de Récord) -->
+      <div id="game-over-screen" style="display: none">
+        <h2>¡Tiempo Agotado!</h2>
+        <p>Tu puntaje final es:</p>
+        <h1 id="final-score">0</h1>
+        <h3 style="margin-top: 10px">
+          Récord del Nivel: <span id="level-high-score">0</span>
+        </h3>
+        <p id="new-record-message" style="display: none">¡NUEVO RÉCORD!</p>
+        <div id="end-game-options" style="margin-top: 20px">
+          <button class="btn" onclick="restartGame()">
+            Jugar de Nuevo (Mismo Nivel)
+          </button>
+          <button class="btn" onclick="goToMenu()">Cambiar de Nivel</button>
+        </div>
+        <p style="margin-top: 15px; opacity: 0.8">
+          (Presiona <kbd>Enter</kbd> para volver a intentar)
+        </p>
+      </div>
+    </main>
+
+    <script>
+      // --- CONFIGURACIÓN Y PALABRAS (Sin cambios) ---
+      const words = {
+        1: [
+          "hola",
+          "sol",
+          "gato",
+          "perro",
+          "luz",
+          "mar",
+          "pan",
+          "rey",
+          "flor",
+          "pez",
+          "mano",
+          "cielo",
+          "agua",
+          "fuego",
+          "aire",
+          "casa",
+          "libro",
+          "luna",
+          "nube",
+          "roca",
+        ],
+        2: [
+          "juego",
+          "código",
+          "teclado",
+          "pantalla",
+          "música",
+          "fiesta",
+          "planeta",
+          "velocidad",
+          "aventura",
+          "guitarra",
+          "montaña",
+          "invierno",
+          "océano",
+          "silencio",
+          "computador",
+          "programar",
+          "desafío",
+          "respuesta",
+          "pregunta",
+        ],
+        3: [
+          "interactivo",
+          "desarrollador",
+          "extraordinario",
+          "responsabilidad",
+          "comunicación",
+          "inteligencia",
+          "tecnología",
+          "biblioteca",
+          "arquitectura",
+          "filosofía",
+          "independencia",
+          "infraestructura",
+          "consecuencia",
+          "conocimiento",
+          "productividad",
+        ],
+      };
+
+      // --- ELEMENTOS DEL DOM (Añadimos los nuevos) ---
+      const startScreen = document.getElementById("start-screen");
+      const gameScreen = document.getElementById("game-screen");
+      const gameOverScreen = document.getElementById("game-over-screen");
+
+      const currentLevelDisplay = document.getElementById(
+        "current-level-display",
+      );
+      const timerDisplay = document.getElementById("timer");
+      const scoreDisplay = document.getElementById("score");
+      const wordDisplay = document.getElementById("word-display");
+      const input = document.getElementById("typing-input");
+
+      const finalScoreDisplay = document.getElementById("final-score");
+      const levelHighScoreDisplay = document.getElementById("level-high-score");
+      const newRecordMessage = document.getElementById("new-record-message");
+      const mainContainer = document.getElementById("main-container");
+
+      // --- ESTADO DEL JUEGO (Sin cambios) ---
+      let currentLevel;
+      let score;
+      let timeLeft;
+      let currentWords;
+      let currentWordIndex;
+      let timerInterval;
+      let isPlaying = false;
+
+      // --- NUEVO: CLAVE PARA LOCAL STORAGE ---
+      const HIGH_SCORE_KEY_PREFIX = "typingGame_highScore_";
+
+      // --- FUNCIONES DEL JUEGO ---
+
+      function startGame(level) {
+        currentLevel = level;
+        score = 0;
+        timeLeft = 60;
+        isPlaying = true;
+
+        currentWords = [...words[currentLevel]]; // Usamos una copia para poder rellenarla si se acaban
+
+        scoreDisplay.textContent = score;
+        timerDisplay.textContent = timeLeft;
+        timerDisplay.classList.remove("warning");
+        currentLevelDisplay.textContent = getLevelName(level);
+
+        startScreen.style.display = "none";
+        gameOverScreen.style.display = "none";
+        gameScreen.style.display = "block";
+
+        input.value = "";
+        input.focus();
+
+        showNewWord();
+        startTimer();
+      }
+
+      function showNewWord() {
+        if (currentWords.length === 0) {
+          currentWords = [...words[currentLevel]]; // Rellenar si se acaban
+        }
+        const randIndex = Math.floor(Math.random() * currentWords.length);
+        wordDisplay.textContent = currentWords.splice(randIndex, 1)[0]; // Tomar y remover la palabra
+
+        wordDisplay.style.animation = "none";
+        void wordDisplay.offsetWidth;
+        wordDisplay.style.animation = "slideDown 0.5s forwards";
+      }
+
+      function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          timerDisplay.textContent = timeLeft;
+
+          if (timeLeft <= 10 && timeLeft > 0) {
+            timerDisplay.classList.add("warning");
+          } else if (timeLeft <= 0) {
+            gameOver();
+          }
+        }, 1000);
+      }
+
+      function gameOver() {
+        clearInterval(timerInterval);
+        isPlaying = false;
+
+        updateHighScore(); // NUEVO: Llamamos a la función de high score
+
+        gameScreen.style.display = "none";
+        gameOverScreen.style.display = "block";
+        finalScoreDisplay.textContent = score;
+      }
+
+      function restartGame() {
+        startGame(currentLevel);
+      }
+
+      function goToMenu() {
+        gameOverScreen.style.display = "none";
+        startScreen.style.display = "flex";
+        loadHighScores(); // NUEVO: Actualizamos los récords al volver al menú
+      }
+
+      function checkInput() {
+        if (!isPlaying) return;
+
+        if (input.value === wordDisplay.textContent) {
+          score++;
+          scoreDisplay.textContent = score;
+          input.value = "";
+
+          mainContainer.classList.add("flash-correct");
+          setTimeout(
+            () => mainContainer.classList.remove("flash-correct"),
+            500,
+          );
+          showNewWord();
+        }
+      }
+
+      // --- NUEVO: FUNCIONES PARA HIGH SCORE Y UTILIDADES ---
+
+      /**
+       * Carga los récords desde localStorage y los muestra en la pantalla de inicio.
+       */
+      function loadHighScores() {
+        for (let i = 1; i <= 3; i++) {
+          const highScore =
+            localStorage.getItem(`${HIGH_SCORE_KEY_PREFIX}${i}`) || 0;
+          document.getElementById(`high-score-${i}`).textContent =
+            `Récord: ${highScore}`;
+        }
+      }
+
+      /**
+       * Compara el puntaje actual con el récord y lo actualiza si es necesario.
+       */
+      function updateHighScore() {
+        const highScoreKey = `${HIGH_SCORE_KEY_PREFIX}${currentLevel}`;
+        const currentHighScore = localStorage.getItem(highScoreKey) || 0;
+
+        levelHighScoreDisplay.textContent = currentHighScore; // Mostrar el récord actual
+        newRecordMessage.style.display = "none"; // Ocultar mensaje de récord por defecto
+
+        if (score > currentHighScore) {
+          localStorage.setItem(highScoreKey, score);
+          levelHighScoreDisplay.textContent = score; // Actualizar con el nuevo récord
+          newRecordMessage.style.display = "block"; // Mostrar mensaje de nuevo récord
+        }
+      }
+
+      /**
+       * Devuelve el nombre del nivel a partir de su número.
+       */
+      function getLevelName(level) {
+        if (level === 1) return "Fácil";
+        if (level === 2) return "Medio";
+        if (level === 3) return "Difícil";
+        return "Desconocido";
+      }
+
+      // --- EVENT LISTENERS ---
+
+      input.addEventListener("input", checkInput);
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === " " || e.code === "Space") {
+          e.preventDefault();
+          if (
+            input.value.trim() !== "" &&
+            input.value !== wordDisplay.textContent
+          ) {
+            input.classList.add("shake");
+            setTimeout(() => input.classList.remove("shake"), 500);
+          }
+        }
+      });
+
+      // NUEVO: Listener para reiniciar con la tecla Enter
+      document.addEventListener("keydown", (e) => {
+        // Solo actuar si la pantalla de fin de juego está visible y la tecla es Enter
+        if (e.key === "Enter" && gameOverScreen.style.display === "block") {
+          e.preventDefault(); // Prevenir cualquier acción por defecto del Enter
+          restartGame();
+        }
+      });
+
+      // NUEVO: Cargar los récords al iniciar la página
+      document.addEventListener("DOMContentLoaded", loadHighScores);
+    </script>
+  </body>
+</html>

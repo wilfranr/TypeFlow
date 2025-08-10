@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="es" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego de Mecanografía</title>
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { 
+        darkMode: "class",
+        theme: {
+          extend: {
+            fontFamily: {
+              'mono': ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+              'display': ['Inter', 'system-ui', 'sans-serif']
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'bounce-gentle': 'bounce 2s infinite',
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+              'slide-up': 'slideUp 0.3s ease-out'
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' }
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' }
+              }
+            }
+          }
+        }
+      };
+    </script>
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+     <!-- Lucide Icons -->
+     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+      .caret {
+        position: relative;
+      }
+      .caret::after {
+        content: "";
+        position: absolute;
+        right: -1px;
+        top: 10%;
+        width: 2px;
+        height: 80%;
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .dark .glass-effect {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .stat-card {
+        transition: all 0.3s ease;
+      }
+      
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+      
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+      }
+      
+      .dark .btn-secondary {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .dark .btn-secondary:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+      
+      .progress-glow {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+        background-size: 200% 100%;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+      
+      @keyframes shimmer {
+        0%, 100% { background-position: 200% 0; }
+        50% { background-position: -200% 0; }
+      }
+      
+      .text-area-container {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .dark .text-area-container {
+        background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(17, 24, 39, 0.7) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .floating-animation {
+        animation: float 6s ease-in-out infinite;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+      }
+    </style>
+  </head>
+  <body class="h-full bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-800 dark:text-gray-100 font-display">
+    <!-- Fondo animado -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-70 animate-pulse-slow"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 dark:bg-blue-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-70 animate-pulse-slow" style="animation-delay: 2s;"></div>
+      <div class="absolute top-40 left-40 w-80 h-80 bg-indigo-300 dark:bg-indigo-900 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-70 animate-pulse-slow" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="relative max-w-6xl mx-auto p-4 md:p-8 min-h-screen">
+      <header class="flex items-center justify-between gap-4 mb-8 animate-fade-in">
+                 <div class="flex items-center gap-3">
+           <div class="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center text-white shadow-lg floating-animation">
+             <i data-lucide="keyboard" class="w-6 h-6"></i>
+           </div>
+          <div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Juego de Mecanografía
+            </h1>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Mejora tu velocidad y precisión</p>
+          </div>
+        </div>
+                 <div class="flex items-center gap-3">
+           <button
+             id="themeBtn"
+             class="btn-secondary px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2"
+           >
+             <i data-lucide="moon" class="w-5 h-5"></i>
+             <span class="hidden sm:inline">Tema</span>
+           </button>
+         </div>
+      </header>
+
+      <!-- Controles -->
+      <section class="glass-effect rounded-2xl p-6 mb-6 animate-slide-up">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div class="lg:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Dificultad</label>
+              <select
+                id="difficulty"
+                class="w-full px-3 py-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              >
+                <option value="easy">Fácil</option>
+                <option value="medium">Media</option>
+                <option value="hard">Difícil</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Modo</label>
+              <select
+                id="mode"
+                class="w-full px-3 py-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              >
+                <option value="words">Palabras</option>
+                <option value="sentences">Frases</option>
+                <option value="code">Código</option>
+              </select>
+            </div>
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Duración</label>
+              <select
+                id="duration"
+                class="w-full px-3 py-2.5 rounded-xl bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              >
+                <option value="30">30s</option>
+                <option value="60" selected>60s</option>
+                <option value="120">120s</option>
+              </select>
+            </div>
+          </div>
+          <div class="lg:col-span-2 flex items-center gap-3 justify-start lg:justify-end">
+                         <button
+               id="startBtn"
+               class="btn-primary px-6 py-2.5 rounded-xl text-white font-medium flex items-center gap-2"
+             >
+               <i data-lucide="play" class="w-5 h-5"></i>
+               Iniciar
+             </button>
+             <button
+               id="pauseBtn"
+               class="btn-secondary px-4 py-2.5 rounded-xl font-medium"
+             >
+               <i data-lucide="pause" class="w-5 h-5"></i>
+             </button>
+             <button
+               id="resetBtn"
+               class="btn-secondary px-4 py-2.5 rounded-xl font-medium"
+             >
+               <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+             </button>
+             <label class="inline-flex items-center gap-2 text-sm ml-2">
+               <input type="checkbox" id="soundToggle" class="rounded focus:ring-2 focus:ring-indigo-500" /> 
+               <i data-lucide="volume-2" class="w-5 h-5"></i>
+             </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Zona de texto -->
+      <section class="text-area-container rounded-2xl p-6 md:p-8 shadow-xl mb-6 animate-slide-up">
+        <div
+          id="textArea"
+          class="font-mono text-lg md:text-xl leading-relaxed select-none break-words min-h-[150px] text-gray-800 dark:text-gray-200"
+        ></div>
+        <input
+          id="hiddenInput"
+          type="text"
+          autocomplete="off"
+          class="sr-only"
+        />
+      </section>
+
+      <!-- Barra de progreso -->
+      <div class="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-6 animate-slide-up">
+        <div
+          id="progressBar"
+          class="h-full progress-glow rounded-full transition-all duration-300 ease-out"
+          style="width: 0%"
+        ></div>
+      </div>
+
+      <!-- Stats -->
+             <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6 animate-slide-up">
+         <div class="stat-card p-4 rounded-xl glass-effect text-center">
+           <div class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 flex items-center justify-center gap-1">
+             <i data-lucide="clock" class="w-3 h-3"></i>
+             Tiempo
+           </div>
+           <div id="time" class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">60s</div>
+         </div>
+         <div class="stat-card p-4 rounded-xl glass-effect text-center">
+           <div class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 flex items-center justify-center gap-1">
+             <i data-lucide="zap" class="w-3 h-3"></i>
+             WPM
+           </div>
+           <div id="wpm" class="text-2xl font-bold text-green-600 dark:text-green-400">0</div>
+         </div>
+         <div class="stat-card p-4 rounded-xl glass-effect text-center">
+           <div class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 flex items-center justify-center gap-1">
+             <i data-lucide="target" class="w-3 h-3"></i>
+             Precisión
+           </div>
+           <div id="accuracy" class="text-2xl font-bold text-blue-600 dark:text-blue-400">100%</div>
+         </div>
+         <div class="stat-card p-4 rounded-xl glass-effect text-center">
+           <div class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 flex items-center justify-center gap-1">
+             <i data-lucide="x-circle" class="w-3 h-3"></i>
+             Errores
+           </div>
+           <div id="errors" class="text-2xl font-bold text-red-600 dark:text-red-400">0</div>
+         </div>
+         <div class="stat-card p-4 rounded-xl glass-effect text-center">
+           <div class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 flex items-center justify-center gap-1">
+             <i data-lucide="bar-chart-3" class="w-3 h-3"></i>
+             CPM
+           </div>
+           <div id="cpm" class="text-2xl font-bold text-purple-600 dark:text-purple-400">0</div>
+         </div>
+         <div class="stat-card p-4 rounded-xl glass-effect text-center">
+           <div class="text-xs text-gray-500 dark:text-gray-400 font-medium mb-1 flex items-center justify-center gap-1">
+             <i data-lucide="trophy" class="w-3 h-3"></i>
+             Mejor
+           </div>
+           <div id="best" class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">0</div>
+         </div>
+       </section>
+
+      <!-- Ayuda -->
+             <details class="glass-effect rounded-xl p-4 cursor-pointer animate-slide-up">
+         <summary class="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+           <i data-lucide="lightbulb" class="w-5 h-5"></i>
+           Atajos y tips
+         </summary>
+        <ul class="text-sm mt-3 list-none space-y-2 text-gray-600 dark:text-gray-400">
+          <li class="flex items-center gap-2"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span><strong>Enter</strong>: Iniciar / siguiente texto</li>
+          <li class="flex items-center gap-2"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span><strong>Esc</strong>: Pausar/Reanudar</li>
+          <li class="flex items-center gap-2"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span><strong>R</strong>: Reiniciar (solo en pausa o terminado)</li>
+          <li class="flex items-center gap-2"><span class="w-2 h-2 bg-indigo-500 rounded-full"></span>Haz clic en el área de texto para enfocar si el teclado no responde</li>
+        </ul>
+      </details>
+    </div>
+
+    <audio id="keyOk" preload="auto">
+      <source
+        src="https://assets.mixkit.co/active_storage/sfx/1101/1101-preview.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+    <audio id="keyErr" preload="auto">
+      <source
+        src="https://assets.mixkit.co/active_storage/sfx/1386/1386-preview.mp3"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <script>
+      // ---------- Datos ----------
+      const WORDS_EASY = [
+        "casa",
+        "perro",
+        "gato",
+        "sol",
+        "luz",
+        "dato",
+        "carta",
+        "nube",
+        "auto",
+        "mesa",
+        "hola",
+        "gracias",
+        "teclado",
+        "raton",
+        "pantalla",
+        "cable",
+        "llave",
+        "torre",
+        "árbol",
+        "paz",
+      ];
+      const WORDS_MED = [
+        "rapidez",
+        "consulta",
+        "sistema",
+        "funcional",
+        "proyecto",
+        "cliente",
+        "servicio",
+        "consulta",
+        "almacén",
+        "carácter",
+        "depuración",
+        "método",
+        "variable",
+        "control",
+        "rendimiento",
+        "análisis",
+        "usuario",
+        "backend",
+        "frontend",
+        "diseño",
+      ];
+      const WORDS_HARD = [
+        "sincronización",
+        "deserialización",
+        "concurrencia",
+        "encriptación",
+        "observabilidad",
+        "responsividad",
+        "configuración",
+        "interoperabilidad",
+        "arquitectura",
+        "transaccional",
+      ];
+
+      const SENTENCES = [
+        "La práctica constante convierte la velocidad en precisión.",
+        "Escribe suave, mira al frente y deja que los dedos recuerden el camino.",
+        "Un buen teclado es como un buen café: mejora el día.",
+        "La paciencia es clave; la precisión viene antes que la velocidad.",
+        "Cada error es una pista para tu siguiente acierto.",
+      ];
+
+      const CODE_SNIPPETS = [
+        `function sum(a, b) {\n  return a + b;\n}`,
+        `const unique = arr => [...new Set(arr)];`,
+        `for (let i = 0; i < n; i++) {\n  total += i;\n}`,
+        `const delay = ms => new Promise(r => setTimeout(r, ms));`,
+        `class Queue {\n  constructor(){ this.q = []; }\n  enqueue(x){ this.q.push(x); }\n  dequeue(){ return this.q.shift(); }\n}`,
+      ];
+
+      // ---------- Estado ----------
+      let target = "";
+      let index = 0;
+      let started = false;
+      let paused = false;
+      let timer = null;
+      let totalTime = 60;
+      let timeLeft = 60;
+      let correct = 0;
+      let mistakes = 0;
+      let typed = 0;
+
+      // ---------- Elementos ----------
+      const difficulty = document.getElementById("difficulty");
+      const mode = document.getElementById("mode");
+      const duration = document.getElementById("duration");
+      const startBtn = document.getElementById("startBtn");
+      const pauseBtn = document.getElementById("pauseBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const textArea = document.getElementById("textArea");
+      const hiddenInput = document.getElementById("hiddenInput");
+      const timeEl = document.getElementById("time");
+      const wpmEl = document.getElementById("wpm");
+      const accEl = document.getElementById("accuracy");
+      const errEl = document.getElementById("errors");
+      const cpmEl = document.getElementById("cpm");
+      const bestEl = document.getElementById("best");
+      const progressBar = document.getElementById("progressBar");
+      const themeBtn = document.getElementById("themeBtn");
+      const soundToggle = document.getElementById("soundToggle");
+      const sndOk = document.getElementById("keyOk");
+      const sndErr = document.getElementById("keyErr");
+
+      // ---------- Persistencia ----------
+      bestEl.textContent = localStorage.getItem("bestWPM") || "0";
+
+      // ---------- Tema ----------
+      const savedTheme = localStorage.getItem("theme");
+      if (
+        savedTheme === "dark" ||
+        (!savedTheme &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      }
+      
+             // Actualizar icono del tema
+       function updateThemeIcon() {
+         const isDark = document.documentElement.classList.contains("dark");
+         const themeIcon = themeBtn.querySelector("i");
+         if (isDark) {
+           themeIcon.setAttribute("data-lucide", "sun");
+         } else {
+           themeIcon.setAttribute("data-lucide", "moon");
+         }
+         // Re-renderizar el icono
+         lucide.createIcons();
+       }
+      
+      updateThemeIcon();
+      
+      themeBtn.addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+        localStorage.setItem(
+          "theme",
+          document.documentElement.classList.contains("dark")
+            ? "dark"
+            : "light",
+        );
+        updateThemeIcon();
+        renderTarget();
+        
+        // Efecto de transición suave
+        document.body.style.transition = "background 0.3s ease";
+        setTimeout(() => {
+          document.body.style.transition = "";
+        }, 300);
+      });
+
+      // ---------- Helpers ----------
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function genWords(level) {
+        const pool =
+          level === "easy"
+            ? WORDS_EASY
+            : level === "medium"
+              ? WORDS_MED
+              : WORDS_HARD;
+        const count = 30; // palabras por set
+        return Array.from({ length: count }, () => pick(pool)).join(" ");
+      }
+
+      function genSentences() {
+        return Array.from({ length: 5 }, () => pick(SENTENCES)).join(" ");
+      }
+
+      function genCode() {
+        return pick(CODE_SNIPPETS);
+      }
+
+      function newTarget() {
+        const m = mode.value;
+        if (m === "words") return genWords(difficulty.value);
+        if (m === "sentences") return genSentences();
+        return genCode();
+      }
+
+      function renderTarget() {
+        const isDark = document.documentElement.classList.contains("dark");
+        const caretColor = isDark ? "#a5b4fc" : "#6366f1";
+        const okColor = isDark ? "#22c55e" : "#16a34a";
+        const errColor = isDark ? "#ef4444" : "#dc2626";
+
+        const spans = [...target].map((ch, i) => {
+          let cls = "";
+          if (i < index) {
+            cls = typedStatus[i]
+              ? `text-green-600 dark:text-green-400 font-medium`
+              : `text-red-600 dark:text-red-400 underline decoration-2 decoration-red-500`;
+          } else if (i === index) {
+            return `<span class="caret relative bg-indigo-100 dark:bg-indigo-900/50 px-0.5 rounded">${escapeHtml(ch)}</span>`;
+          }
+          return `<span class="${cls}">${escapeHtml(ch)}</span>`;
+        });
+        textArea.innerHTML = spans.join("");
+        
+        // Aplicar color del caret vía inline style
+        const existingStyle = document.getElementById('caret-style');
+        if (existingStyle) existingStyle.remove();
+        
+        const style = document.createElement("style");
+        style.id = 'caret-style';
+        style.textContent = `
+          .caret::after {
+            background: ${caretColor} !important;
+            box-shadow: 0 0 8px ${caretColor}40;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      function escapeHtml(s) {
+        return s
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      let typedStatus = []; // true correcto, false error
+
+      function reset(stateOnly = false) {
+        started = false;
+        paused = false;
+        index = 0;
+        correct = 0;
+        mistakes = 0;
+        typed = 0;
+        totalTime = parseInt(duration.value, 10);
+        timeLeft = totalTime;
+        timeEl.textContent = `${timeLeft}s`;
+        wpmEl.textContent = "0";
+        accEl.textContent = "100%";
+        errEl.textContent = "0";
+        cpmEl.textContent = "0";
+        progressBar.style.width = "0%";
+        typedStatus = [];
+        if (!stateOnly) {
+          target = newTarget();
+        }
+        renderTarget();
+        hiddenInput.value = "";
+      }
+
+      function start() {
+        if (started && !paused) {
+          // siguiente texto si ya está en marcha
+          target = newTarget();
+          index = 0;
+          typedStatus = [];
+          renderTarget();
+          return;
+        }
+        if (!started) {
+          started = true;
+          hiddenInput.focus();
+        }
+        paused = false;
+        if (timer) clearInterval(timer);
+        timer = setInterval(tick, 1000);
+      }
+
+      function togglePause() {
+        if (!started) return;
+        paused = !paused;
+        if (paused) {
+          clearInterval(timer);
+        } else {
+          timer = setInterval(tick, 1000);
+          hiddenInput.focus();
+        }
+      }
+
+      function finish() {
+        clearInterval(timer);
+        started = false;
+        const wpm = calcWPM();
+        const best = Math.max(
+          parseInt(localStorage.getItem("bestWPM") || "0", 10),
+          wpm,
+        );
+        localStorage.setItem("bestWPM", String(best));
+        bestEl.textContent = String(best);
+        
+        // Efecto de celebración
+        textArea.classList.add(
+          "ring-4",
+          "ring-green-400",
+          "ring-offset-4",
+          "ring-offset-transparent",
+          "scale-105",
+          "transition-all",
+          "duration-500"
+        );
+        
+        // Efecto de confeti en las estadísticas
+        const stats = [wpmEl, accEl, cpmEl];
+        stats.forEach((stat, i) => {
+          setTimeout(() => {
+            stat.classList.add("animate-bounce-gentle");
+            setTimeout(() => stat.classList.remove("animate-bounce-gentle"), 1000);
+          }, i * 200);
+        });
+        
+        setTimeout(
+          () =>
+            textArea.classList.remove(
+              "ring-4",
+              "ring-green-400",
+              "ring-offset-4",
+              "ring-offset-transparent",
+              "scale-105"
+            ),
+          1500,
+        );
+      }
+
+      function tick() {
+        if (paused) return;
+        timeLeft--;
+        if (timeLeft <= 0) {
+          timeLeft = 0;
+          timeEl.textContent = "0s";
+          finish();
+          return;
+        }
+        timeEl.textContent = `${timeLeft}s`;
+        updateStats();
+        const progress = 100 * (1 - timeLeft / totalTime);
+        progressBar.style.width = progress.toFixed(2) + "%";
+      }
+
+      function calcWPM() {
+        // WPM neto: (caracteres correctos / 5) / minutos
+        const minutes = (totalTime - timeLeft) / 60 || 1 / 60;
+        return Math.max(0, Math.round(correct / 5 / minutes));
+      }
+
+      function updateStats() {
+        const wpm = calcWPM();
+        const accuracy = typed
+          ? Math.max(0, Math.round((correct / typed) * 100))
+          : 100;
+        const cpm = Math.max(
+          0,
+          Math.round(correct / ((totalTime - timeLeft) / 60 || 1 / 60)),
+        );
+        wpmEl.textContent = String(wpm);
+        accEl.textContent = `${accuracy}%`;
+        errEl.textContent = String(mistakes);
+        cpmEl.textContent = String(cpm);
+      }
+
+      // ---------- Eventos ----------
+      textArea.addEventListener("click", () => hiddenInput.focus());
+
+      startBtn.addEventListener("click", start);
+      pauseBtn.addEventListener("click", togglePause);
+      resetBtn.addEventListener("click", () => {
+        reset();
+        hiddenInput.focus();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          start();
+        }
+        if (e.key === "Escape") {
+          e.preventDefault();
+          togglePause();
+        }
+        if (e.key.toLowerCase() === "r") {
+          // Evitar reiniciar accidentalmente durante la partida
+          // Solo permitir con R si está PAUSADO o ya TERMINÓ
+          const gameOver = timeLeft <= 0 || !started;
+          if (paused || gameOver) {
+            e.preventDefault();
+            reset();
+            hiddenInput.focus();
+          }
+        }
+      });
+
+      hiddenInput.addEventListener("input", (e) => {
+        if (!started || paused) return;
+        const value = e.target.value;
+        const char = value[value.length - 1];
+        e.target.value = "";
+        typeChar(char);
+      });
+
+      function typeChar(ch) {
+        if (timeLeft <= 0) return;
+        const expected = target[index] ?? "\n";
+        typed++;
+        if (ch === expected) {
+          correct++;
+          typedStatus[index] = true;
+          index++;
+          playOk();
+          
+          // Efecto sutil de vibración en el área de texto
+          textArea.classList.add("animate-pulse");
+          setTimeout(() => textArea.classList.remove("animate-pulse"), 100);
+        } else {
+          mistakes++;
+          typedStatus[index] = false;
+          index++;
+          playErr();
+          
+          // Efecto de error más visible
+          textArea.classList.add("animate-pulse", "ring-2", "ring-red-400");
+          setTimeout(() => {
+            textArea.classList.remove("animate-pulse", "ring-2", "ring-red-400");
+          }, 300);
+        }
+        if (index >= target.length) {
+          target += (mode.value === "code" ? "\n" : " ") + newTarget();
+        }
+        renderTarget();
+        updateStats();
+      }
+
+      function playOk() {
+        if (soundToggle.checked) {
+          try {
+            sndOk.currentTime = 0;
+            sndOk.play();
+          } catch (_) {}
+        }
+      }
+      function playErr() {
+        if (soundToggle.checked) {
+          try {
+            sndErr.currentTime = 0;
+            sndErr.play();
+          } catch (_) {}
+        }
+      }
+
+             // Inicializar iconos de Lucide
+       lucide.createIcons();
+       
+       // Efecto de carga inicial
+       document.body.style.opacity = "0";
+       document.body.style.transform = "translateY(20px)";
+       document.body.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+       
+       setTimeout(() => {
+         document.body.style.opacity = "1";
+         document.body.style.transform = "translateY(0)";
+       }, 100);
+       
+       // Inicial
+       reset();
+    </script>
+  </body>
+</html>
