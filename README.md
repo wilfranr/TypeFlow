@@ -11,7 +11,7 @@ Una aplicación moderna y elegante de mecanografía para mejorar tu velocidad y 
 - **Estadísticas en Tiempo Real**: WPM, precisión, CPM y más
 - **Modo Oscuro**: Tema claro/oscuro con persistencia
 - **Efectos Visuales**: Animaciones suaves y feedback visual
-- **Sonidos**: Efectos de audio para correcto/incorrecto
+- **Sonidos**: Efectos de audio sintetizados estilo iPhone (sin delay)
 - **Responsive**: Funciona perfectamente en móvil y escritorio
 
 ## 🎮 Cómo Jugar
@@ -37,6 +37,10 @@ Una aplicación moderna y elegante de mecanografía para mejorar tu velocidad y 
 
 ## 🚀 Instalación
 
+### Opción 1: Usar directamente en GitHub Pages
+🎮 **¡Juega ahora mismo!** [https://wilfranr.github.io/TypeFlow/](https://wilfranr.github.io/TypeFlow/)
+
+### Opción 2: Clonar y usar localmente
 1. Clona el repositorio:
 ```bash
 git clone https://github.com/wilfranr/TypeFlow.git
