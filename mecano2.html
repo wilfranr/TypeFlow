@@ -329,80 +329,142 @@
       </details>
     </div>
 
-    <!-- Sonidos sintetizados del teclado -->
+    <!-- Sonidos sintetizados del teclado (estilo iPhone natural) -->
     <script>
-      // Función para crear sonidos de teclado sintetizados (estilo iPhone)
+      // Función para crear sonidos de teclado sintetizados (estilo iPhone natural)
       function createKeyboardSound(type = 'key') {
         try {
           const audioContext = new (window.AudioContext || window.webkitAudioContext)();
           
-          // Configuración del sonido con variaciones sutiles
-          const baseFreq = type === 'key' ? 800 : 400;
-          const variation = Math.random() * 100 - 50; // ±50Hz de variación
+          // Configuración base más natural
+          const baseFreq = type === 'key' ? 1200 : 600;
+          const variation = Math.random() * 80 - 40; // ±40Hz de variación más sutil
           const frequency = baseFreq + variation;
           
-          // Duración muy corta para máxima responsividad
-          const duration = type === 'key' ? 0.06 + Math.random() * 0.02 : 0.08 + Math.random() * 0.02;
+          // Duración ultra corta para máxima responsividad
+          const duration = type === 'key' ? 0.04 + Math.random() * 0.015 : 0.06 + Math.random() * 0.02;
           
-          // Crear oscilador principal
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
+          // Crear múltiples osciladores para riqueza armónica natural
+          const oscillators = [];
+          const gainNodes = [];
           
-          // Crear oscilador secundario para más riqueza tonal
-          const oscillator2 = audioContext.createOscillator();
-          const gainNode2 = audioContext.createGain();
+          // Oscilador principal (fundamental)
+          const osc1 = audioContext.createOscillator();
+          const gain1 = audioContext.createGain();
+          osc1.frequency.setValueAtTime(frequency, audioContext.currentTime);
+          osc1.type = 'sine';
           
-          // Configurar osciladores
-          oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-          oscillator.type = 'sine';
+          // Oscilador armónico 2 (octava superior)
+          const osc2 = audioContext.createOscillator();
+          const gain2 = audioContext.createGain();
+          osc2.frequency.setValueAtTime(frequency * 2, audioContext.currentTime);
+          osc2.type = 'sine';
           
-          oscillator2.frequency.setValueAtTime(frequency * 1.5, audioContext.currentTime);
-          oscillator2.type = 'triangle';
+          // Oscilador armónico 3 (quinta)
+          const osc3 = audioContext.createOscillator();
+          const gain3 = audioContext.createGain();
+          osc3.frequency.setValueAtTime(frequency * 1.5, audioContext.currentTime);
+          osc3.type = 'triangle';
           
-          // Configurar envolvente de ganancia (ADSR optimizado)
+          // Oscilador de ruido sutil para textura
+          const noise = audioContext.createBufferSource();
+          const noiseGain = audioContext.createGain();
+          const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+          const noiseData = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < noiseData.length; i++) {
+            noiseData[i] = (Math.random() - 0.5) * 0.1; // Ruido muy sutil
+          }
+          noise.buffer = noiseBuffer;
+          
+          // Filtro paso bajo para suavizar el ruido
+          const lowpassFilter = audioContext.createBiquadFilter();
+          lowpassFilter.type = 'lowpass';
+          lowpassFilter.frequency.setValueAtTime(frequency * 3, audioContext.currentTime);
+          lowpassFilter.Q.setValueAtTime(0.5, audioContext.currentTime);
+          
+          // Filtro paso alto para eliminar frecuencias bajas no deseadas
+          const highpassFilter = audioContext.createBiquadFilter();
+          highpassFilter.type = 'highpass';
+          highpassFilter.frequency.setValueAtTime(200, audioContext.currentTime);
+          highpassFilter.Q.setValueAtTime(0.7, audioContext.currentTime);
+          
+          // Configurar envolvente de ganancia más natural (ADSR refinado)
           const now = audioContext.currentTime;
           
-          // Oscilador principal
-          gainNode.gain.setValueAtTime(0, now);
-          gainNode.gain.linearRampToValueAtTime(0.25, now + 0.005); // Attack súper rápido
-          gainNode.gain.exponentialRampToValueAtTime(0.05, now + duration);
+          // Envolvente principal (más suave)
+          gain1.gain.setValueAtTime(0, now);
+          gain1.gain.linearRampToValueAtTime(0.3, now + 0.002); // Attack súper rápido
+          gain1.gain.exponentialRampToValueAtTime(0.08, now + duration * 0.3);
+          gain1.gain.exponentialRampToValueAtTime(0.01, now + duration);
           
-          // Oscilador secundario (más sutil)
-          gainNode2.gain.setValueAtTime(0, now);
-          gainNode2.gain.linearRampToValueAtTime(0.1, now + 0.005);
-          gainNode2.gain.exponentialRampToValueAtTime(0.02, now + duration);
+          // Envolvente armónica 2 (más sutil)
+          gain2.gain.setValueAtTime(0, now);
+          gain2.gain.linearRampToValueAtTime(0.15, now + 0.002);
+          gain2.gain.exponentialRampToValueAtTime(0.04, now + duration * 0.25);
+          gain2.gain.exponentialRampToValueAtTime(0.005, now + duration);
           
-          // Conectar nodos
-          oscillator.connect(gainNode);
-          oscillator2.connect(gainNode2);
-          gainNode.connect(audioContext.destination);
-          gainNode2.connect(audioContext.destination);
+          // Envolvente armónica 3 (muy sutil)
+          gain3.gain.setValueAtTime(0, now);
+          gain3.gain.linearRampToValueAtTime(0.08, now + 0.002);
+          gain3.gain.exponentialRampToValueAtTime(0.02, now + duration * 0.2);
+          gain3.gain.exponentialRampToValueAtTime(0.002, now + duration);
           
-          // Iniciar y detener
-          oscillator.start(now);
-          oscillator2.start(now);
-          oscillator.stop(now + duration);
-          oscillator2.stop(now + duration);
+          // Envolvente del ruido
+          noiseGain.gain.setValueAtTime(0, now);
+          noiseGain.gain.linearRampToValueAtTime(0.05, now + 0.001);
+          noiseGain.gain.exponentialRampToValueAtTime(0.01, now + duration * 0.15);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          
+          // Conectar nodos con filtros
+          osc1.connect(gain1);
+          osc2.connect(gain2);
+          osc3.connect(gain3);
+          noise.connect(noiseGain);
+          
+          gain1.connect(highpassFilter);
+          gain2.connect(highpassFilter);
+          gain3.connect(highpassFilter);
+          noiseGain.connect(lowpassFilter);
+          
+          highpassFilter.connect(audioContext.destination);
+          lowpassFilter.connect(audioContext.destination);
+          
+          // Iniciar y detener todos los osciladores
+          osc1.start(now);
+          osc2.start(now);
+          osc3.start(now);
+          noise.start(now);
+          
+          osc1.stop(now + duration);
+          osc2.stop(now + duration);
+          osc3.stop(now + duration);
+          noise.stop(now + duration);
           
           // Limpiar recursos
           setTimeout(() => {
-            oscillator.disconnect();
-            oscillator2.disconnect();
-            gainNode.disconnect();
-            gainNode2.disconnect();
-          }, duration * 1000 + 50);
+            osc1.disconnect();
+            osc2.disconnect();
+            osc3.disconnect();
+            noise.disconnect();
+            gain1.disconnect();
+            gain2.disconnect();
+            gain3.disconnect();
+            noiseGain.disconnect();
+            lowpassFilter.disconnect();
+            highpassFilter.disconnect();
+          }, duration * 1000 + 100);
           
         } catch (error) {
           // Fallback silencioso si hay problemas con Web Audio API
         }
       }
       
-      // Función para crear sonido de tecla correcta (estilo iPhone)
+      // Función para crear sonido de tecla correcta (estilo iPhone natural)
       function createKeySound() {
         createKeyboardSound('key');
       }
       
-      // Función para crear sonido de error (más grave)
+      // Función para crear sonido de error (más grave y natural)
       function createErrorSound() {
         createKeyboardSound('error');
       }
