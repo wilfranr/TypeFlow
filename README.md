@@ -12,6 +12,7 @@ Una aplicación moderna y elegante de mecanografía para mejorar tu velocidad y 
 - **Modo Oscuro**: Tema claro/oscuro con persistencia
 - **Efectos Visuales**: Animaciones suaves y feedback visual
 - **Sonidos**: Efectos de audio sintetizados estilo iPhone natural con múltiples armónicos y filtros (sin delay)
+- **Sonidos de Eventos**: Tiempo agotado y nuevo récord con efectos únicos
 - **Responsive**: Funciona perfectamente en móvil y escritorio
 
 ## 🎮 Cómo Jugar

@@ -222,7 +222,7 @@
                class="btn-primary px-6 py-2.5 rounded-xl text-white font-medium flex items-center gap-2"
              >
                <i data-lucide="play" class="w-5 h-5"></i>
-               Iniciar
+               <span>Iniciar</span>
              </button>
              <button
                id="pauseBtn"
@@ -467,6 +467,111 @@
       // Función para crear sonido de error (más grave y natural)
       function createErrorSound() {
         createKeyboardSound('error');
+      }
+      
+      // Función para crear sonido de tiempo agotado
+      function createTimeUpSound() {
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          
+          // Sonido de alerta más grave y largo
+          const frequency = 300;
+          const duration = 0.8;
+          
+          // Oscilador principal (grave)
+          const osc1 = audioContext.createOscillator();
+          const gain1 = audioContext.createGain();
+          osc1.frequency.setValueAtTime(frequency, audioContext.currentTime);
+          osc1.type = 'sawtooth';
+          
+          // Oscilador de ruido para efecto de alerta
+          const noise = audioContext.createBufferSource();
+          const noiseGain = audioContext.createGain();
+          const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * duration, audioContext.sampleRate);
+          const noiseData = noiseBuffer.getChannelData(0);
+          for (let i = 0; i < noiseData.length; i++) {
+            noiseData[i] = (Math.random() - 0.5) * 0.3;
+          }
+          noise.buffer = noiseBuffer;
+          
+          // Filtro paso bajo para suavizar
+          const lowpassFilter = audioContext.createBiquadFilter();
+          lowpassFilter.type = 'lowpass';
+          lowpassFilter.frequency.setValueAtTime(800, audioContext.currentTime);
+          
+          // Envolvente
+          const now = audioContext.currentTime;
+          gain1.gain.setValueAtTime(0, now);
+          gain1.gain.linearRampToValueAtTime(0.4, now + 0.1);
+          gain1.gain.exponentialRampToValueAtTime(0.01, now + duration);
+          
+          noiseGain.gain.setValueAtTime(0, now);
+          noiseGain.gain.linearRampToValueAtTime(0.2, now + 0.05);
+          noiseGain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+          
+          // Conectar
+          osc1.connect(gain1);
+          noise.connect(noiseGain);
+          gain1.connect(lowpassFilter);
+          noiseGain.connect(lowpassFilter);
+          lowpassFilter.connect(audioContext.destination);
+          
+          // Iniciar y detener
+          osc1.start(now);
+          noise.start(now);
+          osc1.stop(now + duration);
+          noise.stop(now + duration);
+          
+          // Limpiar
+          setTimeout(() => {
+            osc1.disconnect();
+            noise.disconnect();
+            gain1.disconnect();
+            noiseGain.disconnect();
+            lowpassFilter.disconnect();
+          }, duration * 1000 + 100);
+          
+        } catch (error) {
+          // Fallback silencioso
+        }
+      }
+      
+      // Función para crear sonido de nuevo récord
+      function createNewRecordSound() {
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          
+          // Sonido de celebración ascendente
+          const frequencies = [800, 1000, 1200, 1400, 1600];
+          const duration = 0.6;
+          
+          frequencies.forEach((freq, i) => {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+            osc.type = 'sine';
+            
+            const now = audioContext.currentTime + (i * 0.1);
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+            
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            osc.start(now);
+            osc.stop(now + 0.2);
+            
+            setTimeout(() => {
+              osc.disconnect();
+              gain.disconnect();
+            }, (now + 0.2) * 1000 + 100);
+          });
+          
+        } catch (error) {
+          // Fallback silencioso
+        }
       }
     </script>
 
@@ -718,6 +823,8 @@
         }
         renderTarget();
         hiddenInput.value = "";
+        // Actualizar el botón después de resetear
+        updateStartButton();
       }
 
       function start() {
@@ -732,10 +839,42 @@
         if (!started) {
           started = true;
           hiddenInput.focus();
+          // Cambiar el botón para mostrar que el juego está activo
+          updateStartButton();
         }
         paused = false;
         if (timer) clearInterval(timer);
         timer = setInterval(tick, 1000);
+      }
+      
+      // Función para actualizar el botón de iniciar
+      function updateStartButton() {
+        const startBtn = document.getElementById("startBtn");
+        const startIcon = startBtn.querySelector("i");
+        const startText = startBtn.querySelector("span") || startBtn.childNodes[startBtn.childNodes.length - 1];
+        
+        if (started && !paused) {
+          // Juego activo
+          startIcon.setAttribute("data-lucide", "play");
+          startText.textContent = "Siguiente";
+          startBtn.classList.remove("bg-green-600", "hover:bg-green-700");
+          startBtn.classList.add("bg-blue-600", "hover:bg-blue-700");
+        } else if (paused) {
+          // Juego pausado
+          startIcon.setAttribute("data-lucide", "play");
+          startText.textContent = "Reanudar";
+          startBtn.classList.remove("bg-blue-600", "hover:bg-blue-700");
+          startBtn.classList.add("bg-green-600", "hover:bg-green-700");
+        } else {
+          // Juego no iniciado
+          startIcon.setAttribute("data-lucide", "play");
+          startText.textContent = "Iniciar";
+          startBtn.classList.remove("bg-blue-600", "hover:bg-blue-700");
+          startBtn.classList.add("bg-green-600", "hover:bg-green-700");
+        }
+        
+        // Actualizar iconos de Lucide
+        lucide.createIcons();
       }
 
       function togglePause() {
@@ -747,18 +886,32 @@
           timer = setInterval(tick, 1000);
           hiddenInput.focus();
         }
+        // Actualizar el botón después de cambiar el estado de pausa
+        updateStartButton();
       }
 
       function finish() {
         clearInterval(timer);
         started = false;
         const wpm = calcWPM();
-        const best = Math.max(
-          parseInt(localStorage.getItem("bestWPM") || "0", 10),
-          wpm,
-        );
+        const previousBest = parseInt(localStorage.getItem("bestWPM") || "0", 10);
+        const isNewRecord = wpm > previousBest;
+        const best = Math.max(previousBest, wpm);
+        
         localStorage.setItem("bestWPM", String(best));
         bestEl.textContent = String(best);
+        
+        // Sonido de tiempo agotado
+        if (soundToggle.checked) {
+          createTimeUpSound();
+        }
+        
+        // Sonido de nuevo récord si corresponde
+        if (isNewRecord && soundToggle.checked) {
+          setTimeout(() => {
+            createNewRecordSound();
+          }, 500); // Pequeño delay para que se oiga después del sonido de tiempo agotado
+        }
         
         // Efecto de celebración
         textArea.classList.add(
@@ -780,6 +933,14 @@
           }, i * 200);
         });
         
+        // Efecto especial para nuevo récord
+        if (isNewRecord) {
+          bestEl.classList.add("animate-bounce-gentle", "text-yellow-500", "dark:text-yellow-400");
+          setTimeout(() => {
+            bestEl.classList.remove("animate-bounce-gentle", "text-yellow-500", "dark:text-yellow-400");
+          }, 2000);
+        }
+        
         setTimeout(
           () =>
             textArea.classList.remove(
@@ -791,6 +952,9 @@
             ),
           1500,
         );
+        
+        // Actualizar el botón después de terminar
+        updateStartButton();
       }
 
       function tick() {
