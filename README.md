@@ -37,6 +37,10 @@ Una aplicación moderna y elegante de mecanografía para mejorar tu velocidad y 
 
 ## 🚀 Instalación
 
+### Opción 1: Usar directamente en GitHub Pages
+🎮 **¡Juega ahora mismo!** [https://wilfranr.github.io/TypeFlow/](https://wilfranr.github.io/TypeFlow/)
+
+### Opción 2: Clonar y usar localmente
 1. Clona el repositorio:
 ```bash
 git clone https://github.com/wilfranr/TypeFlow.git
