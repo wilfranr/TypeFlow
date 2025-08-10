@@ -239,6 +239,7 @@
              <label class="inline-flex items-center gap-2 text-sm ml-2">
                <input type="checkbox" id="soundToggle" class="rounded focus:ring-2 focus:ring-indigo-500" /> 
                <i data-lucide="volume-2" class="w-5 h-5"></i>
+               <span class="hidden sm:inline">Sonido</span>
              </label>
           </div>
         </div>
@@ -328,18 +329,84 @@
       </details>
     </div>
 
-    <audio id="keyOk" preload="auto">
-      <source
-        src="https://assets.mixkit.co/active_storage/sfx/1101/1101-preview.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
-    <audio id="keyErr" preload="auto">
-      <source
-        src="https://assets.mixkit.co/active_storage/sfx/1386/1386-preview.mp3"
-        type="audio/mpeg"
-      />
-    </audio>
+    <!-- Sonidos sintetizados del teclado -->
+    <script>
+      // Función para crear sonidos de teclado sintetizados (estilo iPhone)
+      function createKeyboardSound(type = 'key') {
+        try {
+          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          
+          // Configuración del sonido con variaciones sutiles
+          const baseFreq = type === 'key' ? 800 : 400;
+          const variation = Math.random() * 100 - 50; // ±50Hz de variación
+          const frequency = baseFreq + variation;
+          
+          // Duración muy corta para máxima responsividad
+          const duration = type === 'key' ? 0.06 + Math.random() * 0.02 : 0.08 + Math.random() * 0.02;
+          
+          // Crear oscilador principal
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          // Crear oscilador secundario para más riqueza tonal
+          const oscillator2 = audioContext.createOscillator();
+          const gainNode2 = audioContext.createGain();
+          
+          // Configurar osciladores
+          oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+          oscillator.type = 'sine';
+          
+          oscillator2.frequency.setValueAtTime(frequency * 1.5, audioContext.currentTime);
+          oscillator2.type = 'triangle';
+          
+          // Configurar envolvente de ganancia (ADSR optimizado)
+          const now = audioContext.currentTime;
+          
+          // Oscilador principal
+          gainNode.gain.setValueAtTime(0, now);
+          gainNode.gain.linearRampToValueAtTime(0.25, now + 0.005); // Attack súper rápido
+          gainNode.gain.exponentialRampToValueAtTime(0.05, now + duration);
+          
+          // Oscilador secundario (más sutil)
+          gainNode2.gain.setValueAtTime(0, now);
+          gainNode2.gain.linearRampToValueAtTime(0.1, now + 0.005);
+          gainNode2.gain.exponentialRampToValueAtTime(0.02, now + duration);
+          
+          // Conectar nodos
+          oscillator.connect(gainNode);
+          oscillator2.connect(gainNode2);
+          gainNode.connect(audioContext.destination);
+          gainNode2.connect(audioContext.destination);
+          
+          // Iniciar y detener
+          oscillator.start(now);
+          oscillator2.start(now);
+          oscillator.stop(now + duration);
+          oscillator2.stop(now + duration);
+          
+          // Limpiar recursos
+          setTimeout(() => {
+            oscillator.disconnect();
+            oscillator2.disconnect();
+            gainNode.disconnect();
+            gainNode2.disconnect();
+          }, duration * 1000 + 50);
+          
+        } catch (error) {
+          // Fallback silencioso si hay problemas con Web Audio API
+        }
+      }
+      
+      // Función para crear sonido de tecla correcta (estilo iPhone)
+      function createKeySound() {
+        createKeyboardSound('key');
+      }
+      
+      // Función para crear sonido de error (más grave)
+      function createErrorSound() {
+        createKeyboardSound('error');
+      }
+    </script>
 
     <script>
       // ---------- Datos ----------
@@ -446,8 +513,7 @@
       const progressBar = document.getElementById("progressBar");
       const themeBtn = document.getElementById("themeBtn");
       const soundToggle = document.getElementById("soundToggle");
-      const sndOk = document.getElementById("keyOk");
-      const sndErr = document.getElementById("keyErr");
+      // Los sonidos ahora se generan sintéticamente
 
       // ---------- Persistencia ----------
       bestEl.textContent = localStorage.getItem("bestWPM") || "0";
@@ -774,18 +840,12 @@
 
       function playOk() {
         if (soundToggle.checked) {
-          try {
-            sndOk.currentTime = 0;
-            sndOk.play();
-          } catch (_) {}
+          createKeySound();
         }
       }
       function playErr() {
         if (soundToggle.checked) {
-          try {
-            sndErr.currentTime = 0;
-            sndErr.play();
-          } catch (_) {}
+          createErrorSound();
         }
       }
 

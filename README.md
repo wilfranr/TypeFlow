@@ -11,7 +11,7 @@ Una aplicación moderna y elegante de mecanografía para mejorar tu velocidad y 
 - **Estadísticas en Tiempo Real**: WPM, precisión, CPM y más
 - **Modo Oscuro**: Tema claro/oscuro con persistencia
 - **Efectos Visuales**: Animaciones suaves y feedback visual
-- **Sonidos**: Efectos de audio para correcto/incorrecto
+- **Sonidos**: Efectos de audio sintetizados estilo iPhone (sin delay)
 - **Responsive**: Funciona perfectamente en móvil y escritorio
 
 ## 🎮 Cómo Jugar
