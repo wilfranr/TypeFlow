@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeFlow - Aplicación de Mecanografía</title>
+    <meta name="description" content="Aplicación moderna y elegante de mecanografía para mejorar tu velocidad y precisión al escribir">
+    <meta name="keywords" content="mecanografía, typing, velocidad, precisión, práctica, teclado">
+    <meta name="author" content="Wilfran Rivera">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://wilfranr.github.io/TypeFlow/">
+    <meta property="og:title" content="TypeFlow - Aplicación de Mecanografía">
+    <meta property="og:description" content="Aplicación moderna y elegante de mecanografía para mejorar tu velocidad y precisión al escribir">
+    <meta property="og:image" content="https://wilfranr.github.io/TypeFlow/preview.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://wilfranr.github.io/TypeFlow/">
+    <meta property="twitter:title" content="TypeFlow - Aplicación de Mecanografía">
+    <meta property="twitter:description" content="Aplicación moderna y elegante de mecanografía para mejorar tu velocidad y precisión al escribir">
+    <meta property="twitter:image" content="https://wilfranr.github.io/TypeFlow/preview.png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        }
+        
+        .features {
+            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+        
+        .feature h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        
+        .feature p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            .subtitle {
+                font-size: 1rem;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">⌨️</div>
+        <h1 class="title">TypeFlow</h1>
+        <p class="subtitle">Aplicación moderna y elegante de mecanografía</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🚀 Diseño Moderno</h3>
+                <p>Interfaz con glassmorphism y gradientes atractivos</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Múltiples Modos</h3>
+                <p>Palabras, frases y código para diferentes niveles</p>
+            </div>
+            <div class="feature">
+                <h3>📊 Estadísticas</h3>
+                <p>WPM, precisión, CPM y más en tiempo real</p>
+            </div>
+            <div class="feature">
+                <h3>🌙 Modo Oscuro</h3>
+                <p>Tema claro/oscuro con persistencia automática</p>
+            </div>
+        </div>
+        
+        <div>
+            <a href="mecano2.html" class="btn btn-primary">🎮 Jugar Ahora</a>
+            <a href="https://github.com/wilfranr/TypeFlow" class="btn" target="_blank">📁 Ver Código</a>
+        </div>
+        
+        <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem;">
+            Desarrollado con ❤️ por <a href="https://github.com/wilfranr" style="color: white; text-decoration: underline;">Wilfran Rivera</a>
+        </p>
+    </div>
+</body>
+</html>
